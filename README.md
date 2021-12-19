@@ -11,3 +11,18 @@ just go from the numbers
 creating different test configuration by creating property file in test > resources
 
 test for coverage - install eclEmma in ecplise marketplace if u dont have it
+
+sequence of topics: 
+
+mock
+mock with return
+mock with multiple return
+mock to return exception
+hamcrest matcher
+argument captor
+bdd approach
+inject mocks
+@Rule over @RunWith
+
+
+

@@ -1,6 +1,7 @@
 package com.shah.unittest.unittesttutorials.business;
+
 /*
-furhter play around with mockito moking the List.class
+play around with mockito by moking the List.class
 
 2. also use of verify() - 
 to test number of method invocations too. We can test exact number of times, at least once, at least, at most number of invocation times for a mocked method.
@@ -22,7 +23,6 @@ When using mock objects, the default behavior of the method when not stub is do 
 While in spy objects, of course, since it is a real method, when you are not stubbing the method, then it will call the real method behavior. If you want to change and mock the method, then you need to stub it.
 
  */
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeast;
@@ -34,24 +34,33 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
-class ListMockTest {
-	List<String> mock = mock(List.class);
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
+class ListMockTest1a {
+	@Mock
+	List<String> mock;
 
 	@Test
 	void size() {
-		List mock = mock(List.class);
+		// BASICS IN USING MOCK - GIVEN, WHEN, THEN
 		when(mock.size()).thenReturn(5);
 		assertEquals(5, mock.size());
 	}
 
 	@Test
 	void diffValues() {
-		List mock = mock(List.class);
+		// when this mock is called the first time, return 5. on second time, return 10.
 		when(mock.size()).thenReturn(5).thenReturn(10);
 		assertEquals(5, mock.size());
 		assertEquals(10, mock.size());
@@ -59,17 +68,45 @@ class ListMockTest {
 
 	@Test
 	void withParam() {
-		List mock = mock(List.class);
 		when(mock.get(0)).thenReturn("shah");
 		assertEquals("shah", mock.get(0));
 	}
 
 	@Test
 	public void returnWithGenericParameters() {
+		// HERE INSTEAD OF DEFINING MOCK WITH SPECIFIC VALUE, U CAN DEFINE ANY VALUE (OR
+		// ANY DATATYPES).
+		// ALSO CALLED ARGUMENT MATCHERS
 		when(mock.get(anyInt())).thenReturn("in28Minutes");
 
 		assertEquals("in28Minutes", mock.get(0));
 		assertEquals("in28Minutes", mock.get(1));
+	}
+
+	@Test
+	void mockToThrowException() {
+		when(mock.get(0)).thenThrow(new RuntimeException());
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			mock.get(0);
+		});
+	}
+
+	@Test
+	void BDDApproach() {
+		// GIVEN
+		when(mock.get(0)).thenReturn("shah");
+
+		// WHEN
+		Object actual = mock.get(0);
+
+		// THEN
+		assertEquals("shah", actual);
+	}
+
+	@Test
+	void mockWithoutDefiningAnything() {
+		// WHEN U DONT DEFIONE ANYTHING, IT WILL RETURN NULL.
+		assertEquals(null, mock.get(0));
 	}
 
 	@Test
@@ -78,11 +115,14 @@ class ListMockTest {
 		String value1 = mock.get(0);
 		String value2 = mock.get(1);
 
-		// Verify
 		verify(mock).get(0);
+
+		// VERIFY THAT .get() can be called twice.
 		verify(mock, times(2)).get(anyInt());
 		verify(mock, atLeast(1)).get(anyInt());
 		verify(mock, atLeastOnce()).get(anyInt());
+
+		// VERIFY THAT .get() can be max twice.
 		verify(mock, atMost(2)).get(anyInt());
 		verify(mock, never()).get(2);
 	}
@@ -98,7 +138,6 @@ class ListMockTest {
 		verify(mock).add(captor.capture());
 
 		assertEquals("SomeString", captor.getValue());
-
 	}
 
 	@Test
@@ -117,19 +156,17 @@ class ListMockTest {
 
 		assertEquals("SomeString1", allValues.get(0));
 		assertEquals("SomeString2", allValues.get(1));
-
 	}
 
 	@Test
 	public void mocking() {
-		ArrayList<String> arrayListMock = mock(ArrayList.class);
-		System.out.println(arrayListMock.get(0));// null
-		System.out.println(arrayListMock.size());// 0
-		arrayListMock.add("Test");
-		arrayListMock.add("Test2");
-		System.out.println(arrayListMock.size());// 0
-		when(arrayListMock.size()).thenReturn(5);
-		System.out.println(arrayListMock.size());// 5
+		System.out.println(mock.get(0));// null
+		System.out.println(mock.size());// 0
+		mock.add("Test");
+		mock.add("Test2");
+		System.out.println(mock.size());// 0
+		when(mock.size()).thenReturn(5);
+		System.out.println(mock.size());// 5
 	}
 
 	@Test
@@ -151,5 +188,4 @@ class ListMockTest {
 		verify(arrayListSpy).add("Test4");
 
 	}
-
 }

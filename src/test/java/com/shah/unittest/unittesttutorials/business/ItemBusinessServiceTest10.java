@@ -22,11 +22,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class ItemBusinessServiceTest10 {
 
+	@Mock
+	ItemRepository repository;
+
 	@InjectMocks
 	ItemBusinessService business;
 
-	@Mock
-	ItemRepository repository;
+	/*
+	 * above code is same as:
+	 * ItemBusinessService business = new ItemBusinessService(repository);
+	 */
 
 	@Test
 	public void calculateSumUsingDataService_basic() {
