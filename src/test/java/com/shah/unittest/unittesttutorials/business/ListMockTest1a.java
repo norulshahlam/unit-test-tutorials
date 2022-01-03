@@ -28,7 +28,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.atMost;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -38,10 +37,10 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -50,6 +49,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class ListMockTest1a {
 	@Mock
 	List<String> mock;
+	
+	@AfterEach
+	void tearDown() {
+		mock=null;
+	}
 
 	@Test
 	void size() {
@@ -160,8 +164,7 @@ class ListMockTest1a {
 
 	@Test
 	public void mocking() {
-		System.out.println(mock.get(0));// null
-		System.out.println(mock.size());// 0
+		//MOCKING WORKS IF U SET IT TO RETURN SOMETHING
 		mock.add("Test");
 		mock.add("Test2");
 		System.out.println(mock.size());// 0
@@ -171,6 +174,7 @@ class ListMockTest1a {
 
 	@Test
 	public void spying() {
+		// SPY IS PARTIAL MOCK, WHERE U CAN IMPLEMENT REAL VALUES. IN REAL APP, MOCK IS USED 99% INSTEAD OF SPY. AVOID USING SPY IF POSSBILE AS IT IS HARD TO MAINTAIN
 		ArrayList<String> arrayListSpy = spy(ArrayList.class);
 		arrayListSpy.add("Test0");
 		System.out.println(arrayListSpy.get(0));// Test0
